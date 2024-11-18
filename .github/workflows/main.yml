@@ -7,16 +7,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: texlive/texlive:latest
+    container: texlive/texlive:latest-full
 
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Compile
       run: make
 
-    - uses: actions/upload-artifact@v4
+    - name: Filter PDFs
+      run: |
+        mkdir -p filtered_pdfs
+        find examples -type f -name '*.pdf' -exec cp {} filtered_pdfs \;
+
+    - name: Send document message
+      uses: sinshutu/upload-to-discord@master
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        name: examples
-        path: examples/*.pdf
+        document: filtered_pdfs/cv.pdf
