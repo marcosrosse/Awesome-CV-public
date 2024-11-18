@@ -26,4 +26,4 @@ jobs:
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        document: filtered_pdfs/cv.pdf
+        args: filtered_pdfs/cv.pdf
